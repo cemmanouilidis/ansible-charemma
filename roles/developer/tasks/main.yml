@@ -1,5 +1,9 @@
 - name: "Instal developer tools"
+  become: yes
   apt: name="{{ item }}"
   with_items:
     - tmux
     - git
+    - gitg
+    - tig 
+    - meld 

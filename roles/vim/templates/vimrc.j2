@@ -1,0 +1,150 @@
+" --------------------------------------------------------
+" General settings 
+" --------------------------------------------------------
+
+" always add the current file's directory to the path if not already there
+autocmd BufRead *
+      \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
+      \ exec "set path-=".s:tempPath |
+      \ exec "set path+=".s:tempPath
+
+" Pathogen load
+filetype off
+
+call pathogen#infect()
+call pathogen#helptags()
+
+filetype plugin indent on
+syntax on
+
+" theme  
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+let g:solarized_contrast="high"
+set background=dark
+colorscheme solarized
+
+" stop anoying audio bell
+set visualbell
+set t_vb=
+
+" editor settings
+set cursorline
+set ruler							" line numbers and column the cursor is on
+set number							" Show line numbering
+set showcmd
+
+set scrolloff=3						" Keep 3 lines below and above the cursor
+set numberwidth=1					" Use 1 col + 1 space for numbers
+set bs=2
+set tabstop=4
+set shiftwidth=4
+
+set nocompatible
+set expandtab
+set autoindent
+set cindent
+set smartindent
+set tabpagemax=20
+set showmatch 
+
+" ignore patterns (e.g. used by command-t)
+set wildignore+=*.o,*.d,*.P,*.ELF,*.bin,*.so,*.pyc,*pyo,*.obj,.git,*.gcda,*.gcno,env/**,venv/**
+
+" enable system clipboard support.
+set clipboard=unnamedplus
+
+" enable some nice non-compliant vim features. 
+set nocp
+
+" Intuitive backspacing in insert mode
+set backspace=indent,eol,start
+
+" improve scrolling, especially for long lines
+set ttyfast " u got a fast terminal
+set ttyscroll=3
+set lazyredraw " to avoid scrolling problems
+
+
+" GUI settings
+
+" tab labels show the filename without path(tail)
+set guitablabel=%N/\ %t\ %M
+
+" remove toolbar widget
+set guioptions-=T
+
+" Search settings 
+" Remove marked matches after search command
+nnoremap <CR> :nohlsearch<CR>/<BS><CR>
+nnoremap <C-b> :!make<CR>
+
+" Highlight search terms...
+set hlsearch
+set incsearch " ...dynamically as they are typed.
+
+" search rules
+set ignorecase 
+set smartcase
+
+
+" File Types handling
+au BufNewFile,BufRead *.wiki setf Wikipedia
+
+" Setup omnicompletion
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+
+" Resize splits when the window is resized
+au VimResized * exe "normal! \<c-w>="
+
+" Settings for Pythonistas
+" Load pylint code plugin
+let g:pymode_lint = 1
+
+" Switch pylint, pyflakes, pep8, mccabe code-checkers
+" Can have multiply values "pep8,pyflakes,mcccabe"
+let g:pymode_lint_checker = "pyflakes,pep8,mccabe"
+
+" Disable pylint checking every save 
+let g:pymode_lint_write = 1 
+
+" Load run code plugin 
+let g:pymode_run = 0
+
+" Hold cursor in current window
+" when quickfix is open
+let g:pymode_lint_hold = 0
+
+" Place error signs
+let g:pymode_lint_signs = 1
+
+" disable automatic python folding
+let g:pymode_folding = 0
+
+" disable rope refactoring module, it's too slow
+let g:pymode_rope = 0
+
+" Disable g:pymode_rope_guess_project to make rope always create 
+" .ropeproject in current dir.
+let g:pymode_rope_guess_project = 0
+    
+"  disable pymode autocompletion since we use jedi plugin
+let g:pymode_rope_completion = 0
+
+" disable selecting first element during auto completion!
+" note: just disabling popup_select_first is not enough, thus popup_on_dot is
+" also disabled
+let g:jedi#popup_on_dot = 0
+let g:jedi#popup_select_first = 0 
+
+" always open quickfix window for grep results
+autocmd QuickFixCmdPost *grep* cwindow
+
+let g:vim_markdown_folding_disabled=1
+
+" jshint 
+let jshint2_save = 1
+let jshint2_close = 0

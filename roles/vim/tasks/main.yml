@@ -1,0 +1,38 @@
+- name: "Install vim and dependencies"
+  become: yes
+  apt: name={{ item }}
+  with_items:
+    - vim-nox
+    - xclip
+
+- name: "Creating .vimrc"
+  template: src=vimrc.j2 dest={{ vimrc }}
+
+- name: "Create dir .vim"
+  file: path={{ vim_dir }} state=directory mode=0755 owner={{ansible_user}} group={{ ansible_user }}
+
+- name: "Create directory structure in .vim"
+  file: path={{ vim_dir }}/{{ item }} state=directory mode=0755 owner={{ansible_user}} group={{ ansible_user }}
+  with_items:
+    - autoload
+    - bundle
+    - colors
+
+- name: "Install pathogen"
+  #  shell: curl -LSso {{ vim_dir }}/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+  get_url: url=https://tpo.pe/pathogen.vim dest={{ vim_dir }}/autoload/pathogen.vim mode=0640
+
+- name: "Install theme solarized"
+  git: repo=https://github.com/altercation/vim-colors-solarized.git dest={{ vim_dir }}/bundle/vim-colors-solarized version=master
+
+- name: "Install plugin vim-go"
+  git: repo=https://github.com/fatih/vim-go.git dest={{ vim_dir }}/bundle/vim-go version=ab01e7e
+
+- name: "Install plugin Dockerfile" 
+  git: repo=https://github.com/ekalinin/Dockerfile.vim.git dest={{ vim_dir }}/bundle/Dockerfile version=5d9ad15
+
+- name: "Install plugin jshint" 
+  git: repo=https://github.com/Shutnik/jshint2.vim dest={{ vim_dir }}/bundle/jshint2 version=dfad043
+
+- name: "Install plugin python-mode"
+  git: repo=https://github.com/klen/python-mode.git dest={{ vim_dir}}/bundle/python-mode version=da4bfe5

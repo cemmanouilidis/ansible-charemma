@@ -1,2 +1,30 @@
-- name: "Install twitter client"
-  apt: name=corebird
+- name: "Create directory {{ ansible_env.HOME}}/.fonts"
+  file: path={{ ansible_env.HOME }}/.fonts state=directory mode=0755 owner={{ansible_user}} group={{ ansible_user }}
+
+- name: "Create directory {{ workspace }}"
+  file: path={{ workspace }} state=directory mode=0755 owner={{ansible_user}} group={{ ansible_user }}
+
+- name: "Create directory structure in {{ workspace }}"
+  file: path={{ workspace }}/{{ item }} state=directory mode=0755 owner={{ansible_user}} group={{ ansible_user }}
+  with_items:
+    - pkg
+    - bin
+    - bashrc.d
+
+- name: "Clone repo solarized xresources"
+  git: repo=https://github.com/solarized/xresources.git dest={{ workspace }}/pkg/solarized-xresources
+
+- name: "Clone repo Fira font"
+  git: repo=https://github.com/mozilla/Fira.git dest={{ workspace }}/pkg/Fira
+  register: fira
+
+- name: "Install Fira font"
+  copy: src={{ workspace }}/pkg/Fira/ttf/ dest=/home/{{ ansible_user }}/.fonts
+  when: fira.changed
+
+- name: "Install desktop applications"
+  become: yes
+  apt: name={{ item }}
+  with_items:
+    - corebird
+    - vlc

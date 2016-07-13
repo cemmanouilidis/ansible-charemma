@@ -11,14 +11,17 @@
     - bin
     - bashrc.d
 
-- name: "Install bashrc"
+- name: "Deploy .bashrc"
   template: src=bashrc.j2 dest={{ ansible_env.HOME}}/.bashrc
 
-- name: "Install {{workspace}}/bashrc.d/theme"
+- name: "Deploy tmux.conf"
+  template: src=tmux.j2 dest={{ ansible_env.HOME}}/.tmux.conf
+
+- name: "Deploy {{workspace}}/bashrc.d/theme"
   template: src=bashrcd_theme.j2 dest={{ workspace }}/bashrc.d/theme
 
-- name: "Clone repo solarized xresources"
-  git: repo=https://github.com/solarized/xresources.git dest={{ workspace }}/pkg/solarized-xresources
+- name: "Clone repo solarized"
+  git: repo=https://github.com/altercation/solarized.git dest={{ workspace }}/pkg/solarized
 
 - name: "Clone repo dircolors-solarized"
   git: repo=https://github.com/seebi/dircolors-solarized.git dest={{ workspace }}/pkg/dircolors-solarized
@@ -34,9 +37,10 @@
 - name: "Set mono space font"
   shell: gsettings set org.gnome.desktop.interface monospace-font-name 'Fira Mono Regular 14'
 
-- name: "Install desktop applications"
+- name: "Install applications"
   become: yes
   apt: name={{ item }}
   with_items:
     - corebird
     - vlc
+    - tmux

@@ -1,0 +1,11 @@
+setw -g mode-keys vi
+
+set -g default-terminal "xterm-256color"    # use 256 colors
+set -g status-utf8 on                       # enable utf-8
+set -g renumber-windows on                  # automatic renumber windows
+set -g history-limit 100000                 # scrollback buffer n lines
+
+# start window indexing at one instead of zero
+set -g base-index 1
+
+source {{ workspace }}/pkg/solarized/tmux/tmuxcolors-dark.conf
